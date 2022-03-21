@@ -46,6 +46,7 @@ class Contenedor {
             return JSON.parse( readFile );         
         } catch(error) {
 
+            fs.writeFileSync( this.route, 'vacio');
             return JSON.parse( '[]' );
         }
     }
