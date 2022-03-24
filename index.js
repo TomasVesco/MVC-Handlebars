@@ -17,18 +17,14 @@ app.engine('hbs', handlebars.engine({
 app.set('view engine', 'hbs');
 app.set('views', './views');
 
-app.get('/productos', function ( req, res ) {
-
-    p.getAll()
-    .then ( products => {
-        if(products == ''){
-            products.push({title: "No se encontraron datos"});
-        }
-        res.render('main', { products });
-    })
+app.get('/productos', async (req, res) => {
+    const products = await p.getAll();
+    res.render('main', { products } );
 });
 
-app.post('/productos', ( req, res ) => {
+app.post('/productos', async (req, res) => {
+    let products = await p.getAll();
+
     const { title, price, image } = req.body;
 
     const newProduct = {
@@ -37,12 +33,10 @@ app.post('/productos', ( req, res ) => {
         image: image
     }
 
-    p.save(newProduct);
+    await p.save(newProduct);
 
-    p.getAll()
-    .then( products => {
-        res.render('main', { products });
-    });
+    products = await p.getAll();
+    res.render('main', { products });  
 });
   
 
